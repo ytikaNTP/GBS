@@ -109,4 +109,4 @@ def static_files(path):
 if __name__ == '__main__':
     if not os.path.exists('static'):
         os.makedirs('static')
-    app.run(port=5000, debug=True)
+    app.run(port=5000, debug=False)
