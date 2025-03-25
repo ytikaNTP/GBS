@@ -4,7 +4,7 @@ import os
 import time
 from datetime import datetime
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 CORS(app, supports_credentials=True, origins="*")
 
 # Хранилище данных в памяти
@@ -53,7 +53,6 @@ def handle_tickets():
             return jsonify({"status": "error", "message": "Внутренняя ошибка сервера"}), 500
 
     elif request.method == 'GET':
-        # Сортировка по дате (новые сверху)
         sorted_tickets = sorted(tickets, key=lambda x: x['id'], reverse=True)
         return jsonify(sorted_tickets)
     
@@ -77,7 +76,6 @@ def handle_ticket(ticket_id):
         try:
             data = request.json
             if 'tags' in data:
-                # Валидация тегов и удаление дубликатов
                 valid_tags = {'contacting', 'rejected', 'spam', 'clown'}
                 ticket['tags'] = [tag for tag in list(set(data['tags'])) if tag in valid_tags]
                 log_activity(f"Обновлены теги для заявки #{ticket_id}")
@@ -90,7 +88,7 @@ def handle_ticket(ticket_id):
 
 @app.route('/activity')
 def get_activity():
-    return jsonify(activity_log[-10:])  # Последние 10 событий
+    return jsonify(activity_log[-10:])
 
 def log_activity(message):
     activity_log.append({
@@ -108,5 +106,12 @@ def static_files(path):
 
 if __name__ == '__main__':
     if not os.path.exists('static'):
-        os.makedirs('static')
-    app.run(port=5000, debug=False)
+        os.makedirs('static', exist_ok=True)
+    
+    # Production settings
+    app.run(
+        host='0.0.0.0',
+        port=5000,
+        debug=False,
+        threaded=True
+    )
