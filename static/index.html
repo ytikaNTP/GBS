@@ -196,7 +196,7 @@
             };
 
             try {
-                const response = await fetch('http://localhost:5000/tickets', {
+                const response = await fetch('http://194.87.226.249:5000/tickets', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(formData)
@@ -237,7 +237,7 @@
         // Обновление списка тикетов
         async function updateAdminPanel() {
             try {
-                const response = await fetch('http://localhost:5000/tickets');
+                const response = await fetch('http://194.87.226.249:5000/tickets');
                 tickets = await response.json();
                 renderTickets();
             } catch (error) {
@@ -313,7 +313,7 @@
                 : [...ticket.tags, tag];
 
             try {
-                await fetch(`http://localhost:5000/tickets/${id}`, {
+                await fetch(`http://194.87.226.249:5000/tickets/${id}`, {
                     method: 'PATCH',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ tags: newTags })
@@ -328,7 +328,7 @@
         // Удаление тикета
         async function deleteTicket(id) {
             if (!confirm('Вы уверены, что хотите удалить заявку?')) return;
-            await fetch(`http://localhost:5000/tickets/${id}`, { method: 'DELETE' });
+            await fetch(`http://194.87.226.249:5000/tickets/${id}`, { method: 'DELETE' });
             await updateAdminPanel();
         }
 
